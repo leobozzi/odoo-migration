@@ -53,16 +53,15 @@ class OdooXmlrcpMigration(object):
     def fields_get(self, server, model):
         server = self.socks[server]
         sock = server['sock']
-        domain = [(1, '=', 1)]
+        domain = ([1, '=', 1])
         f = sock.execute(
             server['dbname'],
             server['uid'],
             server['passwd'],
             model,
             'search_read',
-            domain,
-            []
+            domain,[]
         )
-        print(f)
+
         exit()
-        return {x['name']: x for x in f}
+        return f
