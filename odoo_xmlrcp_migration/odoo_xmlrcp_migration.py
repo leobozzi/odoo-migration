@@ -11,7 +11,11 @@ import sys
 class OdooXmlrcpMigration(object):
     socks = {}
 
+    system_fields = ['id', 'write_date', 'write_uid',
+                     'create_date', 'create_uid', '__last_update']
+
     # Constructor
+
     def __init__(self, config_file='./odoo_xmlrcp_migration.conf'):
         gcontext = ssl._create_unverified_context()
         self.config = ConfigParser()
@@ -45,3 +49,20 @@ class OdooXmlrcpMigration(object):
             self.socks['to']['passwd'])
         self.socks['to']['sock'] = xmlrpclib.ServerProxy(
             '%s/xmlrpc/object' % (self.socks['to']['url']), context=gcontext)
+
+    def fields_get(self, server, model):
+        server = self.socks[server]
+        sock = server['sock']
+        domain = [(1, '=', 1)]
+        f = sock.execute(
+            server['dbname'],
+            server['uid'],
+            server['passwd'],
+            model,
+            'search_read',
+            domain,
+            []
+        )
+        print(f)
+        exit()
+        return {x['name']: x for x in f}

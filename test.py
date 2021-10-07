@@ -8,3 +8,7 @@ import os
 path = os.path.abspath(os.getcwd())
 prueba = OdooXmlrcpMigration(
     config_file='%s/odoo_xmlrcp_migration.conf' % (path))
+
+fields = prueba.fields_get('from', 'res.users')
+
+print(fields)
