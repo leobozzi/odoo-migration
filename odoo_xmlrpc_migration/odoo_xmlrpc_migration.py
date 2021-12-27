@@ -5,10 +5,10 @@ from configparser import ConfigParser
 import ssl
 import sys
 
-# Class OdooXmlrcpMigration
+# Class OdooXmlrpcMigration
 
 
-class OdooXmlrcpMigration(object):
+class OdooXmlrpcMigration(object):
     socks = {}
 
     system_fields = ['id', 'write_date', 'write_uid',
@@ -16,7 +16,7 @@ class OdooXmlrcpMigration(object):
 
     # Constructor
 
-    def __init__(self, config_file='./odoo_xmlrcp_migration.conf'):
+    def __init__(self, config_file='./odoo_xmlrpc_migration.conf'):
         gcontext = ssl._create_unverified_context()
         self.config = ConfigParser()
         self.config.read(config_file)
@@ -53,15 +53,25 @@ class OdooXmlrcpMigration(object):
     def fields_get(self, server, model):
         server = self.socks[server]
         sock = server['sock']
-        domain = ([1, '=', 1])
-        f = sock.execute(
+        domain = [(1, '=', 1)]
+        ids = sock.execute(
             server['dbname'],
             server['uid'],
             server['passwd'],
             model,
-            'search_read',
-            domain,[]
+            'search',
+            domain,
+            []
         )
-
-        exit()
-        return f
+        records = []
+        for id in ids:
+            rec = sock.execute(
+                server['dbname'],
+                server['uid'],
+                server['passwd'],
+                model,
+                'read',
+                [id]
+                )
+            records.append(rec)
+        return records

@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from odoo_xmlrcp_migration.odoo_xmlrcp_migration import OdooXmlrcpMigration
+from odoo_xmlrpc_migration.odoo_xmlrpc_migration import OdooXmlrpcMigration
 
 import os
 
 path = os.path.abspath(os.getcwd())
-prueba = OdooXmlrcpMigration(
-    config_file='%s/odoo_xmlrcp_migration.conf' % (path))
+prueba = OdooXmlrpcMigration(
+    config_file='%s/odoo_xmlrpc_migration.conf' % (path))
 
-#fields = prueba.fields_get('from', 'res.partner')
+fields_from = prueba.fields_get('from', 'res.partner')
 
-#print(fields)
+fields_to = prueba.fields_get('to', 'res.partner')
 
-fields = prueba.fields_get('to', 'res.partner')
+set_from = set(fields_from[0][0].keys())
+set_to = set(fields_to[0][0].keys())
+
+print(set_from-set_to)
+
+#fields = prueba.fields_get('to', 'res.partner')
 #print(len(fields))
